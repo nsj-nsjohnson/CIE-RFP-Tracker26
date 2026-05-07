@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CIE &amp; Closed-Loop Referral RFP Tracker</title>
+<meta name="description" content="State, county, local, and CBO/foundation RFPs for Community Information Exchange and closed-loop referral platforms." />
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #fafaf7;
+    color: #1f1f1f;
+    line-height: 1.45;
+    font-size: 14px;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 22px 26px 80px; }
+  h1 { font-size: 24px; margin: 0 0 4px; font-weight: 600; }
+  .sub { color: #5d5d5d; font-size: 13px; margin-bottom: 14px; }
+  .keywords-banner {
+    background: #fef5e9;
+    border: 1px solid #f5e0c7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #6b4818;
+    margin-bottom: 14px;
+  }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat {
+    background: #fff;
+    border: 1px solid #e6e3dc;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .stat .num { font-size: 24px; font-weight: 600; }
+  .stat .lbl { font-size: 11px; color: #6b6b6b; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+  .stat.open { border-left: 4px solid #2f6b3a; }
+  .stat.open .num { color: #2f6b3a; }
+  .stat.watch { border-left: 4px solid #b85a1c; }
+  .stat.watch .num { color: #b85a1c; }
+  .stat.awarded { border-left: 4px solid #2e4a85; }
+  .stat.awarded .num { color: #2e4a85; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; background: #fff; border: 1px solid #e6e3dc; border-radius: 10px; padding: 11px 14px; }
+  .controls label { font-size: 12px; color: #555; display: flex; gap: 6px; align-items: center; }
+  .controls select, .controls input { font: inherit; border: 1px solid #d6d2c9; border-radius: 6px; padding: 5px 8px; background: #fff; color: #1f1f1f; }
+  .controls input[type="search"] { min-width: 220px; }
+  .tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid #e1ddd3; flex-wrap: wrap; }
+  .tab { padding: 9px 14px; cursor: pointer; border: none; background: transparent; font: inherit; color: #666; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 13px; }
+  .tab.active { color: #b85a1c; border-bottom-color: #b85a1c; font-weight: 600; }
+  .tab .count { display: inline-block; margin-left: 6px; background: #f1ede2; color: #555; border-radius: 10px; padding: 1px 8px; font-size: 11px; }
+  .tab.active .count { background: #fbe2cf; color: #b85a1c; }
+  .panel { background: #fff; border: 1px solid #e6e3dc; border-top: none; border-radius: 0 0 10px 10px; padding: 0; min-height: 220px; }
+ 
+  /* Status section headers */
+  .status-section { padding: 14px 18px 6px; }
+  .status-section.open-section { background: #f4faf5; border-bottom: 1px solid #e1ecdf; }
+  .status-section.watch-section { background: #fef9f1; border-bottom: 1px solid #f0e5d0; }
+  .status-section.awarded-section { background: #f3f6fc; border-bottom: 1px solid #d8e1f0; }
+  .status-section.closed-section { background: #f7f5f5; border-bottom: 1px solid #e8e2e2; }
+  .status-header { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+  .status-header h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .status-header.open h3 { color: #2f6b3a; }
+  .status-header.watch h3 { color: #b85a1c; }
+  .status-header.awarded h3 { color: #2e4a85; }
+  .status-header.closed h3 { color: #7a4646; }
+  .status-header .badge { font-size: 11px; background: #fff; padding: 2px 9px; border-radius: 999px; font-weight: 500; }
+  .status-header.open .badge { color: #2f6b3a; border: 1px solid #2f6b3a; }
+  .status-header.watch .badge { color: #b85a1c; border: 1px solid #b85a1c; }
+  .status-header.awarded .badge { color: #2e4a85; border: 1px solid #2e4a85; }
+  .status-header.closed .badge { color: #7a4646; border: 1px solid #7a4646; }
+  .status-header .blurb { font-size: 12px; color: #777; flex: 1; }
+ 
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #efece4; vertical-align: top; font-size: 13px; }
+  th { background: #f7f4eb; font-weight: 600; color: #555; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fdfcf6; }
+ 
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .pill-state { background: #e9f5ec; color: #1d6b3a; }
+  .pill-county { background: #fdf3e7; color: #9b5410; }
+  .pill-local { background: #fdf3e7; color: #9b5410; }
+  .pill-cbo { background: #f0ecff; color: #4a3a8a; }
+  .pill-foundation { background: #fef5d8; color: #856b0e; }
+  .pill-keyword { background: #f5f0fb; color: #5a3f8a; font-size: 10px; }
+ 
+  a { color: #b85a1c; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .empty { padding: 28px; text-align: center; color: #888; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 11px; padding: 14px; }
+  .card { background: #fff; border: 1px solid #e8e4d9; border-radius: 8px; padding: 12px 14px; }
+  .card h4 { margin: 0 0 5px; font-size: 13px; }
+  .card .pillrow { margin: 5px 0 7px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .card .desc { font-size: 12px; color: #555; line-height: 1.45; }
+  .last-update { font-size: 11px; color: #888; margin-top: 16px; text-align: right; }
+  .quick-search-list { padding: 14px; }
+  .quick-search-list .qs { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid #ebe6db; border-radius: 8px; margin-bottom: 6px; background: #fff; }
+  .quick-search-list .qs:hover { border-color: #d4cdb9; background: #fefcf6; }
+  .qs .label { flex: 1; font-size: 13px; }
+  .qs .meta { font-size: 11px; color: #888; }
+ 
+  .deadline-cell { white-space: nowrap; }
+  .deadline-soon { color: #a02525; font-weight: 600; }
+  .deadline-warn { color: #8d5a14; font-weight: 500; }
+  .deadline-future { color: #2f6b3a; font-weight: 500; }
+  .deadline-passed { color: #888; }
+ 
+  .priority-flag {
+    display: inline-block;
+    background: #b85a1c;
+    color: #fff;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+ 
+  .footer { margin-top: 24px; padding-top: 14px; border-top: 1px solid #e6e3dc; font-size: 12px; color: #888; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .footer a { color: #888; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CIE &amp; Closed-Loop Referral RFP Tracker</h1>
+  <div class="sub">State, county, local, and CBO/foundation procurements for Community Information Exchange and closed-loop referral platforms.</div>
+ 
+  <div class="keywords-banner">
+    <strong>Tracking keywords:</strong> "community information exchange" / CIE • "closed loop referral" / closed-loop referral platform • community resource referral platform
+  </div>
+ 
+  <div class="stats" id="stats"></div>
+ 
+  <div class="controls">
+    <label>Search <input type="search" id="q" placeholder="title, state, agency..." /></label>
+    <label>Type
+      <select id="scope">
+        <option value="all">All types</option>
+        <option value="state">State</option>
+        <option value="county">County / local</option>
+        <option value="cbo">CBO / nonprofit</option>
+        <option value="foundation">Foundation</option>
+      </select>
+    </label>
+    <label>State
+      <select id="stateFilter">
+        <option value="all">All states</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="hideClosed" /> Hide closed</label>
+  </div>
+ 
+  <div class="tabs">
+    <button class="tab active" data-panel="rfps">RFPs <span class="count" id="cnt-rfps">…</span></button>
+    <button class="tab" data-panel="programs">State programs to watch <span class="count" id="cnt-programs">…</span></button>
+    <button class="tab" data-panel="portals">Procurement portals <span class="count" id="cnt-portals">…</span></button>
+    <button class="tab" data-panel="aggregators">Aggregator searches <span class="count" id="cnt-agg">…</span></button>
+    <button class="tab" data-panel="cbo">CBO funders &amp; intermediaries <span class="count" id="cnt-cbo">…</span></button>
+  </div>
+  <div class="panel" id="panel"><div class="empty">Loading…</div></div>
+ 
+  <div class="footer">
+    <div id="last-update"></div>
+    <div>
+      <a href="https://github.com/" id="repo-link">View source on GitHub</a> &nbsp;·&nbsp;
+      Updates curated manually from a daily scan
+    </div>
+  </div>
+</div>
+ 
+<script>
+let activeTab = "rfps";
+let DATA = { rfps: [], programs: [], portals: [], aggregators: [], cbo: [] };
+const STORE_KEY = "cieTrackerPrefs.v4";
+const prefs = (() => {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
+})();
+function savePrefs() { try { localStorage.setItem(STORE_KEY, JSON.stringify(prefs)); } catch (e) {} }
+ 
+document.getElementById("q").value = prefs.q || "";
+document.getElementById("scope").value = prefs.scope || "all";
+document.getElementById("hideClosed").checked = prefs.hideClosed !== false;
+ 
+["q", "scope", "stateFilter"].forEach(id => {
+  document.getElementById(id).addEventListener("input", () => {
+    prefs[id] = document.getElementById(id).value; savePrefs(); render();
+  });
+});
+document.getElementById("hideClosed").addEventListener("change", (e) => {
+  prefs.hideClosed = e.target.checked; savePrefs(); render();
+});
+ 
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    activeTab = t.dataset.panel;
+    render();
+  });
+});
+ 
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function fmtDate(s) {
+  if (!s) return "—";
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+function fmtMonth(s) {
+  if (!s) return "—";
+  if (typeof s === "string" && s.includes("Q")) return s; // already a quarter
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short" });
+}
+function daysUntil(s) {
+  if (!s) return null;
+  const d = new Date(s);
+  if (isNaN(d)) return null;
+  return Math.round((d - new Date()) / (1000 * 60 * 60 * 24));
+}
+function matchQuery(parts, q) {
+  if (!q) return true;
+  const hay = parts.filter(Boolean).join(" ").toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+ 
+function getDeadlineCell(r) {
+  // For OPEN: show actual deadline with urgency color
+  if (r.status === "open") {
+    const d = daysUntil(r.due);
+    let cls = "deadline-future";
+    if (d == null) return `<span class="deadline-passed">TBD</span>`;
+    if (d < 0) cls = "deadline-passed";
+    else if (d <= 14) cls = "deadline-soon";
+    else if (d <= 45) cls = "deadline-warn";
+    return `<span class="${cls}">${fmtDate(r.due)}${d != null ? ` <small>(${d >= 0 ? d + " days" : "passed"})</small>` : ""}</span>`;
+  }
+  // For WATCH: show expected RFI/RFP timing
+  if (r.status === "watch") {
+    const lines = [];
+    if (r.expected_rfi) lines.push(`<small style="color:#888">RFI exp.</small> ${escapeHtml(r.expected_rfi)}`);
+    if (r.expected_rfp) lines.push(`<small style="color:#888">RFP exp.</small> ${escapeHtml(r.expected_rfp)}`);
+    return lines.length ? lines.join("<br/>") : `<span class="deadline-passed">TBD</span>`;
+  }
+  // For AWARDED: show award date
+  if (r.status === "awarded") {
+    return r.awarded_date ? `<small style="color:#888">Awarded</small> ${escapeHtml(r.awarded_date)}` : `<span class="deadline-passed">—</span>`;
+  }
+  // For CLOSED: show due date if known
+  if (r.status === "closed") {
+    return r.due ? `<small style="color:#888">Closed</small> ${fmtDate(r.due)}` : `<span class="deadline-passed">—</span>`;
+  }
+  return `<span class="deadline-passed">—</span>`;
+}
+ 
+function rfpRow(r) {
+  let valueLine = "";
+  if (r.value) valueLine += `<div style="font-size:11px;color:#777;margin-top:3px">Value: ${escapeHtml(r.value)}</div>`;
+  if (r.awardee) valueLine += `<div style="font-size:11px;color:#777;margin-top:2px">Awarded to: ${escapeHtml(r.awardee)}</div>`;
+  const verifiedLine = r.verified_via
+    ? `<details style="margin-top:6px;font-size:11px;color:#888;"><summary style="cursor:pointer;color:#888;">Verification</summary><div style="margin-top:4px;padding:6px 10px;background:#f7f4eb;border-radius:5px;line-height:1.5;">${escapeHtml(r.verified_via)}</div></details>`
+    : "";
+ 
+  // Priority flag for open opportunities with imminent deadlines, OR high-value watch
+  const d = daysUntil(r.due);
+  let priorityFlag = "";
+  if (r.status === "open" && d != null && d >= 0 && d <= 30) priorityFlag = `<span class="priority-flag">Priority</span>`;
+  else if (r.status === "watch" && r.expected_rfp) priorityFlag = `<span class="priority-flag" style="background:#8d5a14">Watch</span>`;
+ 
+  const secondaryLink = r.secondary_url ? ` · <a href="${escapeHtml(r.secondary_url)}" target="_blank" rel="noopener" style="font-size:11px">alt source ↗</a>` : "";
+ 
+  return `<tr>
+    <td>
+      <strong>${escapeHtml(r.title)}</strong>${priorityFlag}
+      <div style="font-size:12px;color:#666;margin-top:4px">${escapeHtml(r.notes || "")}</div>
+      ${valueLine}
+      <div class="pillrow" style="margin-top:5px">${(r.keywords || []).map(k=>`<span class="pill pill-keyword">${escapeHtml(k)}</span>`).join(" ")}</div>
+      ${verifiedLine}
+    </td>
+    <td>${escapeHtml(r.issuer)}<div style="font-size:11px;color:#888;margin-top:2px">${escapeHtml(r.state)} · <span class="pill pill-${escapeHtml(r.scope)}">${escapeHtml(r.scope)}</span></div></td>
+    <td class="deadline-cell">${getDeadlineCell(r)}</td>
+    <td><a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">Open ↗</a>${secondaryLink}</td>
+  </tr>`;
+}
+ 
+function renderStatusSection(rows, status, title, blurb) {
+  if (!rows.length) return "";
+  const headerCol = status === "open" ? "Deadline" : (status === "watch" ? "Expected timing" : (status === "awarded" ? "Awarded" : "Closed"));
+  return `
+    <div class="status-section ${status}-section">
+      <div class="status-header ${status}">
+        <h3>${title}</h3>
+        <span class="badge">${rows.length}</span>
+        <span class="blurb">${blurb}</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr>
+        <th>RFP</th>
+        <th>Issuer / Jurisdiction</th>
+        <th>${headerCol}</th>
+        <th></th>
+      </tr></thead>
+      <tbody>${rows.map(rfpRow).join("")}</tbody>
+    </table>
+  `;
+}
+ 
+function panelRfps() {
+  const q = prefs.q || "";
+  const scope = prefs.scope || "all";
+  const stateFilter = prefs.stateFilter || "all";
+  const hideClosed = prefs.hideClosed !== false;
+ 
+  const filtered = DATA.rfps.filter(r =>
+    matchQuery([r.title, r.issuer, r.state, r.notes, (r.keywords||[]).join(" ")], q)
+    && (scope === "all" || r.scope === scope || (scope === "county" && (r.scope === "county" || r.scope === "local")))
+    && (stateFilter === "all" || r.state === stateFilter)
+    && !(hideClosed && r.status === "closed")
+  );
+ 
+  const open = filtered.filter(r => r.status === "open").sort((a,b) => {
+    const da = a.due ? new Date(a.due) : new Date(8640000000000000);
+    const db = b.due ? new Date(b.due) : new Date(8640000000000000);
+    return da - db;
+  });
+  const watch = filtered.filter(r => r.status === "watch").sort((a,b) => {
+    const ka = a.expected_rfp || a.expected_rfi || "z";
+    const kb = b.expected_rfp || b.expected_rfi || "z";
+    return ka.localeCompare(kb);
+  });
+  const awarded = filtered.filter(r => r.status === "awarded").sort((a,b) => {
+    const da = a.awarded_date || "0";
+    const db = b.awarded_date || "0";
+    return db.localeCompare(da);
+  });
+  const closed = filtered.filter(r => r.status === "closed");
+ 
+  if (!filtered.length) return `<div class="empty">No RFPs match the current filters.</div>`;
+ 
+  return [
+    renderStatusSection(open, "open", "Open — accepting bids", "Active opportunities. Sorted by deadline (soonest first)."),
+    renderStatusSection(watch, "watch", "Watch — forecast / planning", "RFI or RFP expected but not yet posted. Sorted by expected timing."),
+    renderStatusSection(awarded, "awarded", "Awarded — competitive intel", "Recently awarded; useful for partnering or learning who's winning. Sorted by award date (newest first)."),
+    renderStatusSection(closed, "closed", "Closed — historical reference", "Past RFPs no longer active. Useful for understanding precedent.")
+  ].filter(Boolean).join("");
+}
+ 
+function panelPrograms() {
+  const q = prefs.q || "";
+  const list = DATA.programs.filter(p => matchQuery([p.name, p.state, p.note], q));
+  if (!list.length) return `<div class="empty">No programs match.</div>`;
+  return `
+    <div class="status-section watch-section">
+      <div class="status-header watch">
+        <h3>State programs to watch</h3>
+        <span class="badge">${list.length}</span>
+        <span class="blurb">Active CIE / closed-loop referral initiatives where new procurements are most likely.</span>
+      </div>
+    </div>
+    <div class="grid">
+      ${list.map(p => `
+        <div class="card">
+          <h4><a href="${escapeHtml(p.url)}" target="_blank" rel="noopener">${escapeHtml(p.name)} ↗</a></h4>
+          <div class="pillrow"><span class="pill pill-state">${escapeHtml(p.state)}</span></div>
+          <div class="desc">${escapeHtml(p.note)}</div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+ 
+function panelPortals() {
+  const q = prefs.q || "";
+  const scope = prefs.scope || "all";
+  const list = DATA.portals.filter(p =>
+    matchQuery([p.name, p.state, p.desc], q)
+    && (scope === "all" || p.scope === scope || (scope === "county" && (p.scope === "county" || p.scope === "local")))
+  );
+  if (!list.length) return `<div class="empty">No portals match.</div>`;
+  return `
+    <div class="status-section watch-section">
+      <div class="status-header watch">
+        <h3>Procurement portals to monitor</h3>
+        <span class="badge">${list.length}</span>
+        <span class="blurb">State and county procurement portals. The daily scan runs targeted searches across these.</span>
+      </div>
+    </div>
+    <div class="grid">
+      ${list.map(p => `
+        <div class="card">
+          <h4><a href="${escapeHtml(p.url)}" target="_blank" rel="noopener">${escapeHtml(p.name)} ↗</a></h4>
+          <div class="pillrow"><span class="pill pill-${escapeHtml(p.scope)}">${escapeHtml(p.scope)}</span> <span class="pill pill-keyword">${escapeHtml(p.state)}</span></div>
+          <div class="desc">${escapeHtml(p.desc)}</div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+ 
+function panelAggregators() {
+  const q = prefs.q || "";
+  const list = DATA.aggregators.filter(a => matchQuery([a.name, a.note], q));
+  if (!list.length) return `<div class="empty">No aggregators match.</div>`;
+  return `
+    <div class="status-section watch-section">
+      <div class="status-header watch">
+        <h3>Aggregator quick-search links</h3>
+        <span class="badge">${list.length}</span>
+        <span class="blurb">Pre-filled searches across third-party RFP aggregators. Useful for catching small/local issuers.</span>
+      </div>
+    </div>
+    <div class="quick-search-list">
+      ${list.map(a => `
+        <a class="qs" href="${escapeHtml(a.url)}" target="_blank" rel="noopener">
+          <div class="label"><strong>${escapeHtml(a.name)}</strong><div class="meta">${escapeHtml(a.note)}</div></div>
+          <div>↗</div>
+        </a>
+      `).join("")}
+    </div>`;
+}
+ 
+function panelCbo() {
+  const q = prefs.q || "";
+  const scope = prefs.scope || "all";
+  const list = DATA.cbo.filter(c =>
+    matchQuery([c.name, c.state, c.desc], q)
+    && (scope === "all" || c.scope === scope)
+  );
+  if (!list.length) return `<div class="empty">No funders match.</div>`;
+  return `
+    <div class="status-section watch-section">
+      <div class="status-header watch">
+        <h3>CBO funders &amp; intermediaries</h3>
+        <span class="badge">${list.length}</span>
+        <span class="blurb">Foundations, intermediaries, and CBO networks that issue or shape CIE / closed-loop referral procurement.</span>
+      </div>
+    </div>
+    <div class="grid">
+      ${list.map(c => `
+        <div class="card">
+          <h4><a href="${escapeHtml(c.url)}" target="_blank" rel="noopener">${escapeHtml(c.name)} ↗</a></h4>
+          <div class="pillrow"><span class="pill pill-${escapeHtml(c.scope)}">${escapeHtml(c.scope)}</span> <span class="pill pill-keyword">${escapeHtml(c.state)}</span></div>
+          <div class="desc">${escapeHtml(c.desc)}</div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+ 
+function populateStateFilter() {
+  const states = [...new Set(DATA.rfps.map(r => r.state))].sort();
+  const sel = document.getElementById("stateFilter");
+  const current = prefs.stateFilter || "all";
+  sel.innerHTML = `<option value="all">All states</option>` +
+    states.map(s => `<option value="${escapeHtml(s)}"${current === s ? " selected" : ""}>${escapeHtml(s)}</option>`).join("");
+}
+ 
+function render() {
+  document.getElementById("cnt-rfps").textContent = DATA.rfps.length;
+  document.getElementById("cnt-programs").textContent = DATA.programs.length;
+  document.getElementById("cnt-portals").textContent = DATA.portals.length;
+  document.getElementById("cnt-agg").textContent = DATA.aggregators.length;
+  document.getElementById("cnt-cbo").textContent = DATA.cbo.length;
+ 
+  document.querySelectorAll(".tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.panel === activeTab);
+  });
+ 
+  const openCount = DATA.rfps.filter(r => r.status === "open").length;
+  const watchCount = DATA.rfps.filter(r => r.status === "watch").length;
+  const awardedCount = DATA.rfps.filter(r => r.status === "awarded").length;
+  const closedCount = DATA.rfps.filter(r => r.status === "closed").length;
+  document.getElementById("stats").innerHTML = `
+    <div class="stat open"><div class="num">${openCount}</div><div class="lbl">Open</div></div>
+    <div class="stat watch"><div class="num">${watchCount}</div><div class="lbl">Watch / forecast</div></div>
+    <div class="stat awarded"><div class="num">${awardedCount}</div><div class="lbl">Recently awarded</div></div>
+    <div class="stat"><div class="num">${closedCount}</div><div class="lbl">Closed</div></div>
+    <div class="stat"><div class="num">${DATA.programs.length}</div><div class="lbl">Programs watched</div></div>
+  `;
+ 
+  const panel = document.getElementById("panel");
+  if (activeTab === "rfps") panel.innerHTML = panelRfps();
+  else if (activeTab === "programs") panel.innerHTML = panelPrograms();
+  else if (activeTab === "portals") panel.innerHTML = panelPortals();
+  else if (activeTab === "aggregators") panel.innerHTML = panelAggregators();
+  else if (activeTab === "cbo") panel.innerHTML = panelCbo();
+}
+ 
+const INLINE_DATA = {"rfps": [{"id": "ia-johnson-county-cie-shelter-house-2026", "title": "Community Information Exchange of Johnson County (RFP-CIE-2026-1)", "issuer": "Shelter House (with United Way of Johnson & Washington Counties and Johnson County System of Care)", "state": "IA", "scope": "local", "status": "open", "awardee": null, "awarded_date": null, "value": "Indirect costs capped at 15%; specific contract value TBD by proposer", "due": "2026-05-08", "released": "2026-04-08", "pre_proposal_conference": "2026-04-22 11:00 AM CST (Microsoft Teams)", "term": "2-year initial, with annual review and 12-month renewal option", "contact": "Rachel Carr, rachel.carr@shelterhouseiowa.org, 319.259.7342, 429 Southgate Ave, Iowa City, IA 52240", "submission_url": "https://forms.cloud.microsoft/r/BZrRxRMcZ2", "keywords": ["CIE", "closed loop referral", "homelessness coordination"], "url": "https://civitasforhealth.org/funding-opportunities/", "secondary_url": "https://www.shelterhouseiowa.org/", "notes": "TOP PRIORITY OPEN. Cross-sector CIE for housing, healthcare, behavioral health, criminal justice, social services in Johnson County, IA. Modular platform welcome (registry, integration hub, referral mgmt, portals, analytics, consent). Briljent, LLC drafted RFP. Pre-proposal conference April 22; proposals due May 8, 2026 5:00 PM CST. 100-page max. 2-yr initial term + annual review/12-mo renewal. Aligns with new Iowa statewide HIE (Converge Health Iowa).", "verified_via": "PRIMARY SOURCE: full RFP PDF (RFP-CIE-2026-1, April 8, 2026, drafted by Briljent, LLC). Civitas Networks for Health Funding Opportunities corroborates."}, {"id": "mo-social-care-referral-cie-q3-2026", "title": "Social Care Referral Platform / Community Information Exchange RFP", "issuer": "Missouri DSS / MO HealthNet \u2014 Rural Health Transformation / ToRCH Care", "state": "MO", "scope": "state", "status": "watch", "awardee": null, "awarded_date": null, "value": "Funded under $216,276,817.66 Year 1 RHT allocation", "due": null, "expected_rfi": "2026-Q1", "expected_rfp": "2026-Q3", "keywords": ["CIE", "closed loop referral", "social care referral platform"], "url": "https://mydss.mo.gov/mhd/rural-health", "notes": "HIGH PRIORITY. CONFIRMED on Missouri DSS primary-source page under 'Upcoming RHT Request for Procurement (RFP) Opportunities: Social Care Referral Platform / Community Information Exchange \u2014 Quarter Three 2026'. Part of ToRCH Care. Webinar series: 4/22, 4/29, 5/6, 5/13/2026 at 1pm CT. Hub Anchor application early June 2026. Contact: DSS.RHTP@dss.mo.gov.", "verified_via": "PRIMARY SOURCE: mydss.mo.gov/mhd/rural-health directly confirms Q3 2026 RFP. Funding amount, webinar dates, contact email all verified."}, {"id": "mo-dmh-connexion-rfp", "title": "ConneXion \u2014 DD Case & Financial Management System (Information & Referral)", "issuer": "Missouri DMH, Division of Developmental Disabilities", "state": "MO", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": null, "expected_rfp": "Late 2025 / 2026", "keywords": ["resource referral platform", "case management"], "url": "https://dmh.mo.gov/dev-disabilities/connexion", "notes": "Statewide DD case mgmt system covering information & referral, intake, assessment, care planning. Planning & Procurement: Feb 2024 \u2013 Dec 2026. HealthTech Solutions awarded Planning vendor support contract May 2024.", "verified_via": "Exa direct fetch of dmh.mo.gov primary source."}, {"id": "ny-doh-scn-1115-rfa-2024", "title": "Social Care Networks (SCN) Lead Entity RFA \u2014 NYHER 1115 Waiver", "issuer": "New York State DOH (Office of Health Insurance Programs)", "state": "NY", "scope": "state", "status": "awarded", "awardee": "9 regional SCN Lead Entities", "awarded_date": "2024-08", "value": "$500M infrastructure (3 yrs); $3.16B HRSN services authorized", "due": null, "keywords": ["CIE", "closed loop referral", "HRSN"], "url": "https://www.health.ny.gov/health_care/medicaid/redesign/sdh/scn/", "notes": "Major precedent for state-level HRSN procurement. RFA Jan 2024 under NYHER 1115 waiver. Contract Aug 2024 \u2013 March 2027 \u2014 watch for sub-contracts and renewal.", "verified_via": "NYS DOH SCN page; LeadingAge NY confirmation; Findhelp Aug 2024 announcement; Sachs Policy Group; Epstein Becker Green analysis."}, {"id": "wa-hca-cie-program-lead-2025", "title": "Washington Community Information Exchange (CIE) Program Lead Organization", "issuer": "Washington State Health Care Authority (HCA)", "state": "WA", "scope": "state", "status": "awarded", "awardee": "Comagine Health", "awarded_date": "2025-10-30", "value": "$91,172,000 over 5 years", "due": "2025-07-16", "keywords": ["CIE"], "url": "https://www.hca.wa.gov/about-hca/programs-and-initiatives/medicaid-transformation-project-mtp/community-information-exchange-cie", "notes": "Lead-org role under MTP 2.0. Comagine Health partnership announced Oct 30, 2025. Watch for downstream sub-procurements (CBO onboarding, technology, TA).", "verified_via": "HCA GovDelivery bulletin, Comagine Health press release, Bid Banana, HigherGov."}, {"id": "oh-columbus-cie-visionlink-2025", "title": "Columbus CIE Technology Platform Partner", "issuer": "Smart Columbus / Rise Together / CIE Executive Council (Franklin County, OH)", "state": "OH", "scope": "county", "status": "awarded", "awardee": "Visionlink", "awarded_date": "2025-10", "value": null, "due": null, "keywords": ["CIE"], "url": "https://smartcolumbus.com/insights/2025-10-cie-vendor-announcement", "notes": "Community-driven RFP: 80+ orgs accessed materials, 26 applications, 3 finalists. Visionlink selected.", "verified_via": "Smart Columbus announcement and Visionlink corroborating post (Nov 2025)."}, {"id": "pa-navigate-findhelp-2024", "title": "PA Navigate \u2014 Statewide SDOH Closed-Loop Referral Platform", "issuer": "Pennsylvania DHS (with PA HIE Consortium)", "state": "PA", "scope": "state", "status": "awarded", "awardee": "Findhelp (formerly Aunt Bertha)", "awarded_date": "2024-01", "value": "$15.5M ARPA funds", "due": null, "keywords": ["closed loop referral"], "url": "https://panavigate.org/", "notes": "Statewide CLR platform live since Jan 2024. Awarded to Findhelp via 4 PA HIEs (ClinicalConnect, Central PA Connect, HealthShare Exchange, KeyHIE). Underpins Keystones of Health 1115 waiver HRSN services launching Jan 2026.", "verified_via": "TechTarget (Jan 2024); Healthcare IT News; HCI Innovation Group (Sep 2023); PA DHS Keystones of Health TPA RFI."}, {"id": "pa-keystones-of-health-tpa-rfi-2024", "title": "Keystones of Health HRSN Implementation Program Administrator (RFI)", "issuer": "Pennsylvania DHS", "state": "PA", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": null, "expected_rfi": "Issued July 2024", "expected_rfp": "Following RFI evaluation", "keywords": ["HRSN", "closed loop referral"], "url": "https://www.emarketplace.state.pa.us/FileDownload.aspx?OriginalFileName=Keystones+of+Health+TPA+RFI+Final.pdf", "notes": "RFI for Program Administrator: recruit/train CBOs, verify HRSN eligibility, coordinate services between MCOs and providers, support claims. HRSN services launch Jan 2026 per CMS-approved 1115 waiver. Builds on PA Navigate.", "verified_via": "PA eMarketplace RFI document; CMS Keystones of Health 1115 approval (Dec 2024); PA DHS public engagement page."}, {"id": "ma-masshealth-onecare-sco-2026", "title": "One Care & Senior Care Options Plans (RFR for 2026)", "issuer": "Massachusetts EOHHS", "state": "MA", "scope": "state", "status": "awarded", "awardee": "6 One Care + 7 SCO plans selected (Sep 2024)", "awarded_date": "2024-09", "value": null, "due": null, "keywords": ["closed loop referral", "Community Partners", "Community Resource Database"], "url": "https://www.mass.gov/info-details/procurement-for-one-care-plans-and-senior-care-options-sco-plans-for-2026", "notes": "Contracts effective Jan 1, 2026 (5-yr through 2030). Plans must maintain Community Resource Database (web-based, searchable HRSN directory) and partner with BH/LTSS Community Partners. CLR baked in.", "verified_via": "Mass.gov procurement page; COMMBUYS BD-23-1039-EHS01; MA Bulletin 126; ACPP contract."}, {"id": "az-ahcccs-communitycares-clrs", "title": "CommunityCares \u2014 Statewide Closed-Loop Referral System", "issuer": "Arizona AHCCCS (with Contexture)", "state": "AZ", "scope": "state", "status": "awarded", "awardee": "Contexture (HIE) with Unite Us platform (originally NowPow)", "awarded_date": null, "value": null, "due": null, "keywords": ["closed loop referral"], "url": "https://www.azahcccs.gov/AHCCCS/Initiatives/AHCCCSWPCI/closedloopreferralsystem.html", "notes": "Operational statewide system under AHCCCS Whole Person Care Initiative. Free for providers and CBOs. Watch open solicitations for expansions.", "verified_via": "AHCCCS CommunityCares program page; HIT Consultant 2021; Contexture page."}, {"id": "va-cardinal-care-managed-care-rfp-13330", "title": "Cardinal Care Managed Care (RFP 13330) \u2014 HRSN screening & coordination", "issuer": "Virginia DMAS", "state": "VA", "scope": "state", "status": "awarded", "awardee": "Aetna, Anthem, Humana, Sentara, UnitedHealthcare", "awarded_date": "2024-04", "value": "Multi-year MCO contracts effective July 1, 2025", "due": null, "keywords": ["HRSN", "care coordination"], "url": "https://www.dmas.virginia.gov/for-providers/cardinal-care-providers/cardinal-care-managed-care/", "notes": "Cardinal Care reprocurement expanded HRSN screening, care coordination, community partner engagement requirements. Anthem also got Foster Care Specialty Plan. Effective July 1, 2025 (5-yr). Watch for downstream subcontracts.", "verified_via": "VA DMAS page; VA General Assembly RD411 report; SFY 2026 CCMC contract; January 2026 quarterly report."}, {"id": "or-oha-cie-statewide-watch", "title": "Statewide CIE Procurement (planning / 7-year budget)", "issuer": "Oregon Health Authority \u2014 Office of Health IT", "state": "OR", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": null, "keywords": ["CIE"], "url": "https://www.oregon.gov/oha/hpa/ohit/pages/cie-overview.aspx", "notes": "OHA 7-year budget plan includes statewide CIE procurement for FFS, OHA, ODHS HRSN. 2026-2027 partnership with HIT Commons for CCO training/TA. No formal RFP issued yet.", "verified_via": "OHA CIE Overview; HITOC Strategic Plan 2024-2028; Healthcare Innovation."}, {"id": "tx-hhsc-211-tirn-2025", "title": "2-1-1 Texas Information and Referral Network (RFA HHS0015545)", "issuer": "Texas HHSC", "state": "TX", "scope": "state", "status": "awarded", "awardee": "Multiple regional Area Information Centers (25 regions)", "awarded_date": "2025", "value": "$56,213,574.60 total ($11,242,714.92 max per fiscal year)", "due": "2025-04-17", "keywords": ["211", "information & referral"], "url": "https://resources.hhs.texas.gov/sites/default/files/documents/hhs0015545-211-texas-information-and-referral-network.pdf", "notes": "Statewide 2-1-1 Information & Referral. 5-yr project starting Sep 1, 2026. Adjacent to CIE/CLR but I&R-focused, not closed-loop.", "verified_via": "TX HHSC RFA HHS0015545 document; HHS Open Enrollment Opportunities page."}, {"id": "ca-calaim-mcp-clr-procurements", "title": "MCP-Level Closed-Loop Referral Platform Procurements (CalAIM)", "issuer": "Multiple Medi-Cal Managed Care Plans (under CA DHCS mandate)", "state": "CA", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": null, "keywords": ["closed loop referral", "CalAIM"], "url": "https://www.dhcs.ca.gov/CalAIM/Pages/Closed-Loop-Referral-FAQs.aspx", "notes": "DHCS required Medi-Cal MCPs to implement CLR systems starting July 1, 2025. Individual MCPs (LA Care, Anthem, CalOptima, Partnership HealthPlan) running their own platform procurements.", "verified_via": "DHCS CalAIM CLR FAQ; Implementation Guidance PDF; Findhelp 2025 industry post; Aurrera Health Group analysis."}, {"id": "ca-calaim-1115-renewal-watch", "title": "CalAIM 1115 + 1915(b) Waiver Renewal (post-Dec 2026)", "issuer": "California DHCS", "state": "CA", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": null, "keywords": ["CalAIM"], "url": "https://www.dhcs.ca.gov/provgovpart/Pages/CalAIM-1115-and-1915b-Waiver-Renewals.aspx", "notes": "Current 1115 + 1915(b) approved through Dec 2026. DHCS draft renewal application Feb 2026 (public comment Feb 10 \u2013 Mar 12, 2026). New procurements likely to follow renewal.", "verified_via": "DHCS Section 1115 Waivers page; CalAIM-1115-Waiver-Renewal-Application.pdf."}, {"id": "ia-cardiovascular-hub-spoke-rfp-2026", "title": "Cardiovascular Health Hub and Spoke Networks (RFP COMPADM26007)", "issuer": "Iowa HHS", "state": "IA", "scope": "state", "status": "watch", "awardee": null, "value": null, "due": "2026-09 or 2026-10", "expected_rfp": "2026-07 or 2026-08", "keywords": ["referral networks"], "url": "https://hhs.iowa.gov/media/18574/download?inline=", "notes": "Tangential CIE/CLR fit \u2014 explicitly includes 'establishing referral networks and agreements'. Iowa Rural Health Transformation grant. Notice of Intent to Release issued. Issuing Officer: Stacey Hewitt.", "verified_via": "Exa direct fetch of Iowa HHS Notice of Intent to Release PDF."}, {"id": "ia-hin-hie-rfp-185-2515-2026", "title": "Iowa Health Information Network \u2014 HIE Operator (RFP-185-2515-2026)", "issuer": "Iowa Department of Management - IT", "state": "IA", "scope": "state", "status": "awarded", "awardee": "Converge Health Iowa (with Orion Health)", "awarded_date": "2025-12", "value": "Est. $500K \u2013 $5M range", "due": "2025-10-29", "keywords": ["HIE"], "url": "https://bidopportunities.iowa.gov/Home/BidInfo?bidId=299bfb5a-bfbc-4dbb-98fa-5136ef66b6c8", "notes": "HIE (clinical) \u2014 adjacent context aligned with the new Johnson County CIE RFP. Replaces CyncHealth. Contract 2/2/2026 \u2013 2/1/2027 with up to 7 annual renewals.", "verified_via": "Iowa HHS HIE Transition FAQ PDF; HCI Innovation Group; Bid Banana."}, {"id": "ia-communities-of-care-ta-compadm26003", "title": "Communities of Care Technical Assistance Provider (RFP COMPADM26003)", "issuer": "Iowa HHS", "state": "IA", "scope": "state", "status": "awarded", "awardee": "Iowa Primary Care Association", "awarded_date": "2026-02-05", "value": "$6M total CMS funding (Rural Health Transformation)", "due": null, "keywords": ["referral networks", "Rural Health Transformation"], "url": "https://www.iowagrants.gov/viewStorefrontOpportunity.do?OIDString=1763757008996%7COpportunity", "notes": "TA provider for rural Iowa Communities of Care \u2014 includes 'referral protocols, service integration'. Contract Feb 15, 2026 \u2013 Sep 30, 2031.", "verified_via": "Iowa HHS Notice of Intent to Award PDF (hhs.iowa.gov/media/18138)."}, {"id": "nh-dhhs-clr-2024-ocom-02", "title": "RFP-2024-OCOM-02-CLOSE \u2014 Statewide Closed-Loop Referral", "issuer": "New Hampshire DHHS (joint with Dept. of Military Affairs & Veterans Services)", "state": "NH", "scope": "state", "status": "closed", "awardee": null, "value": null, "due": null, "keywords": ["closed loop referral"], "url": "https://www.dhhs.nh.gov/news-and-media/rfp-2024-ocom-02-close-closed-loop-referral", "notes": "Statewide CLR platform RFP per RSA 126-A:4. Originally published October 2023. Award status not confirmed via search.", "verified_via": "NH DHHS RFP listing page and PDF."}], "programs": [{"state": "WA", "name": "WA HCA \u2014 CIE Program (MTP 2.0)", "url": "https://www.hca.wa.gov/about-hca/programs-and-initiatives/medicaid-transformation-project-mtp/community-information-exchange-cie", "note": "Lead org awarded to Comagine. Watch for CBO/tech sub-procurements."}, {"state": "OR", "name": "OHA \u2014 CIE Statewide Procurement (planned)", "url": "https://www.oregon.gov/oha/hpa/ohit/pages/cie-overview.aspx", "note": "Statewide CIE in 7-year budget plan. RFP forthcoming."}, {"state": "AZ", "name": "AHCCCS \u2014 CommunityCares (operational)", "url": "https://www.azahcccs.gov/AHCCCS/Initiatives/AHCCCSWPCI/closedloopreferralsystem.html", "note": "CommunityCares CLRS operational via Contexture + Unite Us. Not actively procuring \u2014 watch for expansions."}, {"state": "CA", "name": "DHCS \u2014 CalAIM ECM/Community Supports", "url": "https://www.dhcs.ca.gov/enhancedcaremanagementandinlieuofservices", "note": "MCP-driven; closed-loop referral baked into 2026 waiver renewal."}, {"state": "NC", "name": "NC Medicaid \u2014 HOP wind-down / NCCARE360", "url": "https://www.ncdhhs.gov/about/department-initiatives/healthy-opportunities/healthy-opportunities-pilots", "note": "HOP being wound down per NC General Assembly 2025 budget. NCCARE360 (FHLI) remains operational. Watch for replacement procurement."}, {"state": "NH", "name": "NH DHHS \u2014 Statewide CLR Platform", "url": "https://www.dhhs.nh.gov/news-and-media/rfp-2024-ocom-02-close-closed-loop-referral", "note": "Statewide CLR active. Watch for expansion / follow-on RFPs."}, {"state": "OH", "name": "Smart Columbus \u2014 Franklin County CIE (Visionlink awarded)", "url": "https://smartcolumbus.com/insights/2025-10-cie-vendor-announcement", "note": "Visionlink selected Oct/Nov 2025. Watch for downstream CBO onboarding RFPs."}, {"state": "TX", "name": "TX HHSC \u2014 2-1-1 TIRN (awarded) + regional CIE pilots", "url": "https://www.hhs.texas.gov/about/process-improvement/improving-services-texans/health-information-technology-health-information-exchange/statewide-health-information-exchange", "note": "2-1-1 TIRN awarded $56M to 25 regional AICs. Houston/Austin running regional CIE pilots (Channels360 via SE Texas HIE). MES modernization RFPs starting 2027."}, {"state": "MN", "name": "MN DHS \u2014 Open RFPs", "url": "https://mn.gov/dhs/partners-and-providers/grants-rfps/open-rfps/", "note": "DHS frequently posts SDOH/referral-related RFPs."}, {"state": "MI", "name": "MDHHS \u2014 MiHealthyLife (SDOH/CBO)", "url": "https://www.michigan.gov/mdhhs", "note": "Managed-care contracts emphasize CBO investment; downstream procurements likely."}, {"state": "TN", "name": "TennCare \u2014 Upcoming Procurements", "url": "https://www.tn.gov/tenncare/information-statistics/upcoming-procurements.html", "note": "Procurement forecast page \u2014 useful for scheduled visibility."}, {"state": "MA", "name": "MassHealth \u2014 One Care/SCO (2026 contracts) + Community Partners", "url": "https://www.mass.gov/info-details/procurement-for-one-care-plans-and-senior-care-options-sco-plans-for-2026", "note": "6 One Care + 7 SCO plans selected Sep 2024; coverage starts Jan 1, 2026. Plans must maintain Community Resource Database (HRSN search) and partner with BH/LTSS Community Partners. Watch for downstream CP procurement cycles."}, {"state": "NY", "name": "NYS DOH \u2014 Social Care Networks (NYHER 1115)", "url": "https://www.health.ny.gov/health_care/medicaid/redesign/sdh/scn/", "note": "9 SCN Lead Entities awarded Aug 2024 (contract Aug 2024 \u2013 Mar 2027); $500M infrastructure + $3.16B HRSN services. Major active engine \u2014 watch for sub-contracts and 2027 renewal."}, {"state": "OH", "name": "Ohio Department of Medicaid RFPs", "url": "https://medicaid.ohio.gov/wps/portal/gov/medicaid/stakeholders-and-partners/legal-and-contracts/requests-for-proposals", "note": "Statewide Medicaid RFP listing."}, {"state": "PA", "name": "PA Navigate (operational) + Keystones of Health 1115", "url": "https://panavigate.org/", "note": "Statewide Findhelp-powered closed-loop referral platform LIVE since Jan 2024. Keystones of Health 1115 waiver HRSN services launching Jan 2026. Watch DHS for the HRSN Program Administrator RFP following the July 2024 RFI."}, {"state": "PA", "name": "Allegheny County DHS \u2014 Solicitations", "url": "https://solicitations.alleghenycounty.us/", "note": "National reference for integrated coordinated entry; will be early implementer of Keystones of Health."}, {"state": "VA", "name": "VA DMAS \u2014 Cardinal Care MC (RFP 13330 awarded)", "url": "https://www.dmas.virginia.gov/for-providers/cardinal-care-providers/cardinal-care-managed-care/", "note": "5 MCOs awarded April 2024 (Aetna, Anthem, Humana, Sentara, UHC). Effective July 1, 2025. HRSN screening + care coordination requirements expanded."}, {"state": "CO", "name": "HCPF \u2014 Health First Colorado", "url": "https://hcpf.colorado.gov/contracts-and-rfps", "note": "Colorado Medicaid procurement portal."}], "portals": [{"name": "California \u2014 CalProcure", "scope": "state", "state": "CA", "url": "https://caleprocure.ca.gov/", "desc": "Statewide procurement; search for CIE / CLR / SDOH terms."}, {"name": "Texas SmartBuy / ESBD", "scope": "state", "state": "TX", "url": "https://www.txsmartbuy.gov/esbd", "desc": "Texas Electronic State Business Daily \u2014 HHSC postings."}, {"name": "NY State Contract Reporter", "scope": "state", "state": "NY", "url": "https://www.nyscr.ny.gov/", "desc": "Statewide procurement registry; OMH/OASAS/DOH RFPs."}, {"name": "Oregon \u2014 OregonBuys", "scope": "state", "state": "OR", "url": "https://oregonbuys.gov/", "desc": "OR statewide procurement (formerly ORPIN)."}, {"name": "Massachusetts COMMBUYS", "scope": "state", "state": "MA", "url": "https://www.commbuys.com/bso/", "desc": "MA central bidding portal."}, {"name": "Pennsylvania eMarketplace", "scope": "state", "state": "PA", "url": "https://www.emarketplace.state.pa.us/", "desc": "PA statewide procurement portal."}, {"name": "Texas DIR \u2014 IT solicitations", "scope": "state", "state": "TX", "url": "https://dir.texas.gov/it-solutions-and-services/selling-through-dir/schedule-of-solicitation-opportunities", "desc": "TX Department of Information Resources \u2014 IT/data platforms."}, {"name": "Allegheny County DHS \u2014 Solicitations", "scope": "county", "state": "PA", "url": "https://solicitations.alleghenycounty.us/", "desc": "DHS / coordinated entry / integrated data."}, {"name": "Howard County, MD \u2014 Solicitations", "scope": "county", "state": "MD", "url": "https://www.howardcountymd.gov/procurement-contract-administration/current-solicitations", "desc": "County procurement listing."}, {"name": "Milwaukee County \u2014 Bids & RFPs", "scope": "county", "state": "WI", "url": "https://county.milwaukee.gov/EN/Admin-Services/Bids-and-RFPs", "desc": "Milwaukee County procurement."}, {"name": "Wake County, NC \u2014 Business Opportunities", "scope": "county", "state": "NC", "url": "https://www.wake.gov/departments-government/finance/current-business-opportunities", "desc": "Wake County RFP listing."}, {"name": "Miami-Dade County \u2014 Requests", "scope": "county", "state": "FL", "url": "https://www.miamidade.gov/global/housing/requests.page", "desc": "Miami-Dade RFA/RFP/RFQ listings."}, {"name": "King County / KCRHA", "scope": "county", "state": "WA", "url": "https://kcrha.org/", "desc": "King County Regional Homelessness Authority \u2014 CES/HMIS work."}, {"name": "Regional Task Force on Homelessness \u2014 San Diego", "scope": "county", "state": "CA", "url": "https://www.rtfhsd.org/", "desc": "Operates the original 211 San Diego CIE \u2014 very active CIE issuer."}, {"name": "San Mateo County, CA \u2014 RFP", "scope": "county", "state": "CA", "url": "https://www.smcgov.org/ceo/request-proposals-rfp", "desc": "County RFP listing."}, {"name": "San Luis Obispo County HHAP", "scope": "county", "state": "CA", "url": "https://www.slocounty.ca.gov/departments/social-services/forms-documents/homeless-services/funding-availability/", "desc": "HHAP funding requires HMIS/CES participation."}, {"name": "Mendocino County, CA \u2014 Open RFPs", "scope": "county", "state": "CA", "url": "https://www.mendocinocounty.gov/how-do-i/find-open-rfp-quotes-bids", "desc": "County-level CIE/CLR RFPs surface here."}], "aggregators": [{"name": "Civitas Networks for Health \u2014 Funding Opportunities (HIGH PRIORITY)", "url": "https://civitasforhealth.org/funding-opportunities/", "note": "National nonprofit, 170+ member orgs across HIE/CIE/health data sharing. Posts CIE/CLR RFPs weekly on Mondays. Surfaced the Iowa Johnson County CIE RFP. Member newsletter is a primary discovery channel for niche CIE work."}, {"name": "Civitas Networks for Health \u2014 Latest News", "url": "https://civitasforhealth.org/news/", "note": "Network announcements, policy updates, member activity. Useful signal source for upcoming procurements."}, {"name": "Bid Banana \u2014 \"community information exchange\"", "url": "https://bidbanana.thebidlab.com/search?q=community+information+exchange", "note": "TheBidLab aggregator \u2014 found the WA CIE Program Lead RFP."}, {"name": "Bid Banana \u2014 \"closed loop referral\"", "url": "https://bidbanana.thebidlab.com/search?q=closed+loop+referral", "note": "Closed-loop referral platform searches across states/counties."}, {"name": "Starbridge.ai \u2014 \"community information exchange\"", "url": "https://starbridge.ai/search?query=community+information+exchange", "note": "AI-curated RFP feed."}, {"name": "Starbridge.ai \u2014 \"closed loop referral\"", "url": "https://starbridge.ai/search?query=closed+loop+referral", "note": "Closed-loop referral leads."}, {"name": "FindRFP \u2014 CIE / referral platform search", "url": "https://findrfp.com/", "note": "Multi-state aggregator. Free site search; subscription for detail."}, {"name": "RFPMart \u2014 Community Information Exchange RFPs", "url": "https://www.rfpmart.com/search.aspx?searchTerm=community+information+exchange", "note": "USA/Canada/UK aggregator."}, {"name": "GovDirections \u2014 state & local bid feeds", "url": "https://govdirections.com/", "note": "Daily state/local bid notifications."}, {"name": "BidNet Direct \u2014 multi-state bids", "url": "https://www.bidnetdirect.com/", "note": "Subscription aggregator across state & local."}, {"name": "HigherGov \u2014 opportunities search", "url": "https://www.highergov.com/contract-opportunities/", "note": "Federal-leaning but indexes some state & local."}, {"name": "Periscope/PeriscopeS2G", "url": "https://www.periscopeholdings.com/", "note": "Vendor portal serving many state and local procurements."}, {"name": "Philanthropy News Digest \u2014 RFPs", "url": "https://philanthropynewsdigest.org/rfps", "note": "Foundation RFPs (relevant for CBO-targeted work)."}], "cbo": [{"name": "Center for Health Care Strategies (CHCS)", "state": "ALL", "scope": "cbo", "url": "https://www.chcs.org/", "desc": "Authors state Medicaid CRRP/CIE guidance; advance signals on procurement direction."}, {"name": "Allen Family Philanthropies \u2014 Accelerating NCS RFP", "state": "ALL", "scope": "foundation", "url": "https://www.allenphilanthropies.org/accelerating-ncs-rfp", "desc": "Funds Network of Care/CBO infrastructure projects."}, {"name": "The New York Community Trust", "state": "NY", "scope": "foundation", "url": "https://thenytrust.org/nonprofits/rfp-loi-additional-funding-opportunities/", "desc": "Issues RFPs across NY-area human services and tech."}, {"name": "Enterprise Community Partners", "state": "ALL", "scope": "cbo", "url": "https://www.enterprisecommunity.org/grants-and-rfps", "desc": "Affordable housing & community development RFPs; intersects with CES/CIE."}, {"name": "Camden Coalition", "state": "NJ", "scope": "cbo", "url": "https://camdenhealth.org/", "desc": "Pioneered care-coordination data sharing; informs CIE design nationally."}, {"name": "211 San Diego / Live Well CIE", "state": "CA", "scope": "cbo", "url": "https://211sandiego.org/cie/", "desc": "Original modern CIE; periodic vendor / partner RFPs."}, {"name": "Unite Us \u2014 RFP / partner page", "state": "ALL", "scope": "cbo", "url": "https://uniteus.com/", "desc": "Major CIE platform \u2014 public-sector partners often issue RFPs Unite Us responds to."}, {"name": "Findhelp (formerly Aunt Bertha)", "state": "ALL", "scope": "cbo", "url": "https://www.findhelp.org/", "desc": "Closed-loop referral platform commonly named in RFPs."}, {"name": "CIE Coalition (national)", "state": "ALL", "scope": "cbo", "url": "https://ciesandiego.org/cie-coalition/", "desc": "National network \u2014 RFP signals from member sites."}, {"name": "Robert Wood Johnson Foundation (SDOH)", "state": "ALL", "scope": "foundation", "url": "https://www.rwjf.org/en/grants/funding-opportunities.html", "desc": "Major funder of SDOH/CIE-adjacent work."}, {"name": "California Health Care Foundation (CHCF)", "state": "CA", "scope": "foundation", "url": "https://www.chcf.org/grants/", "desc": "CalAIM-aligned grants; CIE/CLR investments."}, {"name": "Episcopal Health Foundation (TX)", "state": "TX", "scope": "foundation", "url": "https://www.episcopalhealth.org/grants/", "desc": "TX SDOH funder."}, {"name": "Candid \u2014 Funding finder", "state": "ALL", "scope": "foundation", "url": "https://candid.org/candid-search/find-nonprofit-funding/", "desc": "Aggregated foundation grant search."}]};
+ 
+async function loadAll() {
+  Object.keys(INLINE_DATA).forEach(k => DATA[k] = INLINE_DATA[k] || []);
+  populateStateFilter();
+  document.getElementById("last-update").textContent = "Last loaded: " + new Date().toLocaleString();
+  render();
+}
+ 
+loadAll();
+</script>
+</body>
+</html>
